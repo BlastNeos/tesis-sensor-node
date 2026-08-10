@@ -10,3 +10,10 @@ firmware/esp32-bme280/include/Secrets.h
 
 # Sistema operativo
 .DS_Store
+
+# Entorno virtual
+.env
+**/.env
+**/.venv/
+**/__pycache__/
+**/.pytest_cache/
