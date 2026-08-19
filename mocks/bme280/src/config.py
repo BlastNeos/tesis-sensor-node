@@ -60,7 +60,7 @@ class Settings:
 
     @property
     def status_topic(self) -> str:
-        return f"system/status/{self.node_id}"
+        return f"meteo/status/{self.node_id}"
 
     @property
     def real_wait_seconds(self) -> float:

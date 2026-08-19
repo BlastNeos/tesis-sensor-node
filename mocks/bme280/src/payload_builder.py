@@ -29,11 +29,9 @@ def build_measurement_payload(
         },
     }
 
-def build_status_payload(*, node_id: str, status: str, emitted_at: datetime) -> dict[str, Any]:
+def build_status_payload(*, node_id: str, status: str) -> dict[str, Any]:
     return {
         "node_id": node_id,
-        "component": "mock_bme280",
+        "source": "mock_bme280",
         "status": status,
-        "timestamp": format_utc_timestamp(emitted_at),
-        "schema_version": "1.0",
     }

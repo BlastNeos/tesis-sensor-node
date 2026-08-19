@@ -21,12 +21,10 @@ class MqttPublisher:
             self._client.username_pw_set(settings.mqtt_username, settings.mqtt_password)
 
         offline_payload = json.dumps(
-            {
-                "node_id": settings.node_id,
-                "component": "mock_bme280",
-                "status": "offline",
-                "schema_version": "1.0",
-            },
+            build_status_payload(
+                node_id=settings.node_id,
+                status="offline",
+            ),
             separators=(",", ":"),
         )
         self._client.will_set(
@@ -71,9 +69,8 @@ class MqttPublisher:
 
     def publish_status(self, status: str) -> None:
         payload = build_status_payload(
-            node_id=self._settings.node_id,
-            status=status,
-            emitted_at=datetime.now(timezone.utc),
+        node_id=self._settings.node_id,
+        status=status,
         )
         self._publish_json(self._settings.status_topic, payload, retain=True)
 

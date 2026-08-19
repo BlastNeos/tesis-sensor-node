@@ -1,7 +1,11 @@
 from datetime import datetime, timezone
 import pytest
 from src.models import SensorReading
-from src.payload_builder import build_measurement_payload, format_utc_timestamp
+from src.payload_builder import (
+    build_measurement_payload,
+    build_status_payload,
+    format_utc_timestamp,
+)
 
 def test_payload_uses_envelope_and_nested_metrics() -> None:
     payload = build_measurement_payload(
@@ -20,3 +24,15 @@ def test_payload_uses_envelope_and_nested_metrics() -> None:
 def test_timestamp_must_include_timezone() -> None:
     with pytest.raises(ValueError):
         format_utc_timestamp(datetime(2026, 8, 5, 15, 0))
+
+def test_status_payload_uses_documented_source() -> None:
+    payload = build_status_payload(
+        node_id="lit-cordoba-01",
+        status="online",
+    )
+
+    assert payload == {
+        "node_id": "lit-cordoba-01",
+        "source": "mock_bme280",
+        "status": "online",
+    }
