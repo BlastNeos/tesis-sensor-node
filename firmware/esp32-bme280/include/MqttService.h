@@ -19,7 +19,7 @@ class MqttService {
   void resetBackoff();
 
   WiFiClient networkClient_;
-  MQTTClient mqttClient_{512, 128};
+  MQTTClient mqttClient_{512, 512};
 
   String sensorTopic_;
   String statusTopic_;
