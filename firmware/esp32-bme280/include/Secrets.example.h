@@ -5,6 +5,7 @@
 namespace Secrets {
 inline constexpr char WIFI_SSID[] = "NOMBRE_DE_TU_WIFI";
 inline constexpr char WIFI_PASSWORD[] = "CLAVE_DE_TU_WIFI";
+inline constexpr char MQTT_HOST[] = "IP_O_HOSTNAME_DEL_BROKER";
 
 // En el Mosquitto local de desarrollo se permite acceso anónimo,
 // por eso estos campos pueden quedar vacíos al principio.

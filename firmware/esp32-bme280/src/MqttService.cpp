@@ -10,7 +10,7 @@ void MqttService::begin(const String& lastWillPayload) {
   sensorTopic_ = String(AppConfig::SENSOR_TOPIC_PREFIX) + AppConfig::NODE_ID;
   statusTopic_ = String(AppConfig::STATUS_TOPIC_PREFIX) + AppConfig::NODE_ID;
 
-  mqttClient_.begin(AppConfig::MQTT_HOST, AppConfig::MQTT_PORT, networkClient_);
+  mqttClient_.begin(Secrets::MQTT_HOST, AppConfig::MQTT_PORT, networkClient_);
   mqttClient_.setOptions(30, false, 2'000);  // keepalive, sesión persistente, timeout
 
   // El broker publicará este mensaje si el ESP32 desaparece sin desconectarse bien.
@@ -68,7 +68,7 @@ bool MqttService::publishMeasurement(const String& payload) {
 }
 
 void MqttService::attemptConnection() {
-  Serial.printf("[MQTT] Conectando a %s:%u...\n", AppConfig::MQTT_HOST,
+  Serial.printf("[MQTT] Conectando a %s:%u...\n", Secrets::MQTT_HOST,
                 AppConfig::MQTT_PORT);
 
   bool connectedNow = false;

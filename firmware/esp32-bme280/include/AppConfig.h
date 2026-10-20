@@ -13,9 +13,6 @@ inline constexpr char SENSOR_UID[] = "bme280-01";
 // Identifica al programa MQTT que corre en el ESP32.
 inline constexpr char MQTT_CLIENT_ID[] = "esp32-bme280-lit-cordoba-01";
 
-// Durante el desarrollo debe ser la IP LAN de la PC donde corre Mosquitto.
-// No usar "localhost": para el ESP32, localhost es el propio ESP32.
-inline constexpr char MQTT_HOST[] = "192.168.1.10";
 inline constexpr uint16_t MQTT_PORT = 1883;
 
 // Contrato MQTT ambiental.
