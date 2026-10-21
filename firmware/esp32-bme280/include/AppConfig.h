@@ -21,6 +21,7 @@ inline constexpr char STATUS_TOPIC_PREFIX[] = "meteo/status/";
 
 // El SRS define 60 segundos por defecto.
 inline constexpr uint32_t SAMPLE_INTERVAL_MS = 60'000;
+inline constexpr uint32_t SENSOR_RETRY_INTERVAL_MS = 10'000;
 inline constexpr uint32_t HEARTBEAT_INTERVAL_MS = 30'000;
 
 // Pines habituales en un ESP32 DevKit clásico. Confirmar para la placa real.
