@@ -33,6 +33,7 @@ def build_measurement_payload(
             "pressure_hpa": reading.pressure_hpa,
             "precipitation_mm": reading.precipitation_mm,
             "wind_speed_kmh": reading.wind_speed_kmh,
+            "wind_direction_deg": reading.wind_direction_deg,
             "cloud_cover_pct": reading.cloud_cover_pct,
         },
     }

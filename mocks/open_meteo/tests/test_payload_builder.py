@@ -13,6 +13,7 @@ def _reading() -> ExternalWeatherReading:
         pressure_hpa=1011.2,
         precipitation_mm=0.4,
         wind_speed_kmh=15.2,
+        wind_direction_deg=225,
         cloud_cover_pct=78.0,
     )
 
@@ -29,8 +30,10 @@ def test_payload_uses_external_topic_contract_metadata() -> None:
     assert payload["source"] == "mock"
     assert payload["producer"] == "open_meteo"
     assert payload["timestamp"] == "2026-08-05T15:00:00Z"
+
     assert payload["metrics"]["precipitation_mm"] == 0.4
     assert payload["metrics"]["wind_speed_kmh"] == 15.2
+    assert payload["metrics"]["wind_direction_deg"] == 225
     assert payload["metrics"]["cloud_cover_pct"] == 78.0
 
 
@@ -41,8 +44,10 @@ def test_payload_preserves_null_fields() -> None:
         pressure_hpa=None,
         precipitation_mm=0.0,
         wind_speed_kmh=10.0,
+        wind_direction_deg=None,
         cloud_cover_pct=None,
     )
+
     payload = build_measurement_payload(
         node_id="lit-cordoba-01",
         schema_version="1.0",
@@ -52,6 +57,7 @@ def test_payload_preserves_null_fields() -> None:
 
     assert payload["metrics"]["temperature_c"] is None
     assert payload["metrics"]["pressure_hpa"] is None
+    assert payload["metrics"]["wind_direction_deg"] is None
     assert payload["metrics"]["cloud_cover_pct"] is None
 
 

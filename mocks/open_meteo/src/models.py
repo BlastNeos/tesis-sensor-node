@@ -8,4 +8,5 @@ class ExternalWeatherReading:
     pressure_hpa: float | None
     precipitation_mm: float | None
     wind_speed_kmh: float | None
+    wind_direction_deg: int | None
     cloud_cover_pct: float | None
