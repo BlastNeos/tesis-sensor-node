@@ -1,26 +1,52 @@
 services:
+  broker:
+    image: eclipse-mosquitto:2.0.21
+    restart: unless-stopped
+    ports:
+      - "1883:1883"
+    volumes:
+      - ../mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+
   meteo_db:
     image: timescale/timescaledb:2.17.2-pg16
     restart: unless-stopped
-
     environment:
       POSTGRES_DB: ${METEO_DB_NAME:-meteo_data}
       POSTGRES_USER: ${METEO_DB_USER:-meteo_app}
       POSTGRES_PASSWORD: ${METEO_DB_PASSWORD:-meteo_dev_password}
-
     volumes:
       - meteo_db_data:/var/lib/postgresql/data
       - ./init_meteo_data.sql:/docker-entrypoint-initdb.d/init_meteo_data.sql:ro
-
     healthcheck:
       test:
         [
           "CMD-SHELL",
-          "pg_isready -U ${METEO_DB_USER:-meteo_app} -d ${METEO_DB_NAME:-meteo_data}",
+          "pg_isready -U ${METEO_DB_USER:-meteo_app} -d ${METEO_DB_NAME:-meteo_data}"
         ]
       interval: 10s
       timeout: 5s
       retries: 5
+
+  meteo_consumer:
+    build:
+      context: ../..
+      dockerfile: services/meteo_consumer/Dockerfile
+    restart: unless-stopped
+    environment:
+      MQTT_HOST: broker
+      MQTT_PORT: 1883
+      MQTT_QOS: 1
+
+      METEO_DB_HOST: meteo_db
+      METEO_DB_PORT: 5432
+      METEO_DB_NAME: ${METEO_DB_NAME:-meteo_data}
+      METEO_DB_USER: ${METEO_DB_USER:-meteo_app}
+      METEO_DB_PASSWORD: ${METEO_DB_PASSWORD:-meteo_dev_password}
+    depends_on:
+      broker:
+        condition: service_started
+      meteo_db:
+        condition: service_healthy
 
 volumes:
   meteo_db_data:
