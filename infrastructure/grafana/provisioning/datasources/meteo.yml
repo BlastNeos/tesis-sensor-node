@@ -1,0 +1,17 @@
+apiVersion: 1
+
+datasources:
+  - name: Meteo TimescaleDB
+    uid: meteo-timescaledb
+    type: postgres
+    access: proxy
+    url: meteo_db:5432
+    user: ${METEO_DB_USER}
+    secureJsonData:
+      password: ${METEO_DB_PASSWORD}
+    jsonData:
+      database: ${METEO_DB_NAME}
+      sslmode: disable
+      postgresVersion: 1600
+      timescaledb: true
+    editable: true

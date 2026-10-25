@@ -48,5 +48,25 @@ services:
       meteo_db:
         condition: service_healthy
 
+  grafana:
+    image: grafana/grafana:13.2.4
+    restart: unless-stopped
+    ports:
+      - "3001:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-grafana_dev_password}
+
+      METEO_DB_NAME: ${METEO_DB_NAME:-meteo_data}
+      METEO_DB_USER: ${METEO_DB_USER:-meteo_app}
+      METEO_DB_PASSWORD: ${METEO_DB_PASSWORD:-meteo_dev_password}
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ../grafana/provisioning:/etc/grafana/provisioning:ro
+    depends_on:
+      meteo_db:
+        condition: service_healthy
+
 volumes:
   meteo_db_data:
+  grafana_data:

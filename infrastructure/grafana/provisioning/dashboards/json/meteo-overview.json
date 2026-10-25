@@ -1,0 +1,211 @@
+{
+  "id": null,
+  "uid": "meteo-overview",
+  "title": "Datos Ambientales",
+  "description": "Visualización temporal de las mediciones meteorológicas del nodo lit-cordoba-01.",
+  "tags": [
+    "tesis",
+    "meteorologia"
+  ],
+  "timezone": "browser",
+  "editable": true,
+  "graphTooltip": 2,
+  "refresh": "5m",
+  "schemaVersion": 41,
+  "version": 1,
+  "time": {
+    "from": "now-24h",
+    "to": "now"
+  },
+  "annotations": {
+    "list": []
+  },
+  "panels": [
+    {
+      "id": 1,
+      "type": "timeseries",
+      "title": "Temperatura",
+      "description": "Mediciones ambientales de lit-cordoba-01. Cada productor se muestra como una serie independiente.",
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "meteo-timescaledb"
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "celsius",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "showLegend": true,
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": []
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "asc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "meteo-timescaledb"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "SELECT\n    $__timeGroupAlias(time, $__interval),\n    AVG(temperature_c) AS value,\n    producer AS metric\nFROM env_metrics\nWHERE $__timeFilter(time)\n  AND node_id = 'lit-cordoba-01'\n  AND source = 'real'\n  AND temperature_c IS NOT NULL\nGROUP BY 1, producer\nORDER BY 1;",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "type": "timeseries",
+      "title": "Humedad relativa",
+      "description": "Mediciones ambientales de lit-cordoba-01. Cada productor se muestra como una serie independiente.",
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "meteo-timescaledb"
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "showLegend": true,
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": []
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "asc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "meteo-timescaledb"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "SELECT\n    $__timeGroupAlias(time, $__interval),\n    AVG(humidity_pct) AS value,\n    producer AS metric\nFROM env_metrics\nWHERE $__timeFilter(time)\n  AND node_id = 'lit-cordoba-01'\n  AND source = 'real'\n  AND humidity_pct IS NOT NULL\nGROUP BY 1, producer\nORDER BY 1;",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "type": "timeseries",
+      "title": "Presión atmosférica",
+      "description": "Mediciones ambientales de lit-cordoba-01. Cada productor se muestra como una serie independiente.",
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "meteo-timescaledb"
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 9
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "pressurehpa",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "showLegend": true,
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": []
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "asc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "meteo-timescaledb"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "SELECT\n    $__timeGroupAlias(time, $__interval),\n    AVG(pressure_hpa) AS value,\n    producer AS metric\nFROM env_metrics\nWHERE $__timeFilter(time)\n  AND node_id = 'lit-cordoba-01'\n  AND source = 'real'\n  AND pressure_hpa IS NOT NULL\nGROUP BY 1, producer\nORDER BY 1;",
+          "refId": "A"
+        }
+      ]
+    }
+  ]
+}
