@@ -10,8 +10,11 @@ from .payload_builder import build_status_payload
 
 
 class MqttPublisher:
-    """Mismo patrón que services/api_smn/src/mqtt_publisher.py -- ver el
-    comentario ahí sobre por qué está duplicado en vez de compartido."""
+    """Publicador MQTT del integrador OHMC.
+
+    Publica mediciones meteorológicas externas y el estado online/offline
+    del productor usando QoS y LWT configurables.
+    """
 
     def __init__(self, settings: Settings) -> None:
         self._settings = settings

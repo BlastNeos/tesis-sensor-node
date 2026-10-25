@@ -1,7 +1,8 @@
 # Integrador de clima externo — Omixom / OHMC (Laboratorio de Hidráulica-UNC)
 
-Cumple RF-11/RF-14 (`docs/03_SRS.md` de `starlink-measurement-station`) — estación
-más cercana al LIT investigada hasta ahora (misma facultad, FCEFyN/UNC). Publica
+Cumple RF-11/RF-14 del dominio meteorológico. Integra como fuente externa
+la estación del Observatorio Hidrometeorológico de Córdoba (OHMC) ubicada
+en el Laboratorio de Hidráulica de la FCEFyN/UNC y publica sus mediciones
 en `meteo/external/<node_id>`.
 
 ## ✅ Camino A (el implementado y probado, 12/9/2026) — API real del OHMC
@@ -57,7 +58,7 @@ confirmó el Camino A — correr con `python -m src.main_reports` en vez de
 ```bash
 cp .env.example .env   # completar OHMC_EMAIL/OHMC_PASSWORD
 pip install -r requirements.txt
-python -m pytest tests/ -v      # 14 tests
+python -m pytest tests/ -v      # 15 tests
 python -m src.main              # Camino A -- poll cada 15 min a la API real
 ```
 
