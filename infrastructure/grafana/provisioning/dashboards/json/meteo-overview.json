@@ -12,7 +12,7 @@
   "graphTooltip": 2,
   "refresh": "5m",
   "schemaVersion": 41,
-  "version": 1,
+  "version": 2,
   "time": {
     "from": "now-24h",
     "to": "now"
@@ -203,6 +203,68 @@
           "format": "time_series",
           "rawQuery": true,
           "rawSql": "SELECT\n    $__timeGroupAlias(time, $__interval),\n    AVG(pressure_hpa) AS value,\n    producer AS metric\nFROM env_metrics\nWHERE $__timeFilter(time)\n  AND node_id = 'lit-cordoba-01'\n  AND source = 'real'\n  AND pressure_hpa IS NOT NULL\nGROUP BY 1, producer\nORDER BY 1;",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "type": "timeseries",
+      "title": "Precipitación",
+      "description": "Precipitación reportada por los productores meteorológicos, expresada en milímetros.",
+      "datasource": {
+        "type": "grafana-postgresql-datasource",
+        "uid": "meteo-timescaledb"
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 9
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "lengthmm",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "showLegend": true,
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": []
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "asc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "grafana-postgresql-datasource",
+            "uid": "meteo-timescaledb"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "SELECT\n    time AS \"time\",\n    precipitation_mm AS \"value\",\n    producer AS \"metric\"\nFROM env_metrics\nWHERE $__timeFilter(time)\n  AND node_id = 'lit-cordoba-01'\n  AND source = 'real'\n  AND precipitation_mm IS NOT NULL\nORDER BY time;",
           "refId": "A"
         }
       ]

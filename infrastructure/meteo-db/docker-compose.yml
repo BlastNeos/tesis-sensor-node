@@ -48,6 +48,23 @@ services:
       meteo_db:
         condition: service_healthy
 
+  api_omixom:
+    build:
+      context: ../../services/api_omixom
+      dockerfile: Dockerfile
+    restart: unless-stopped
+
+    env_file:
+      - ../../services/api_omixom/.env
+
+    environment:
+      MQTT_HOST: broker
+      MQTT_PORT: "1883"
+
+    depends_on:
+      broker:
+        condition: service_started
+
   grafana:
     image: grafana/grafana:13.2.4
     restart: unless-stopped
