@@ -1,0 +1,26 @@
+# Git
+.git/
+.gitignore
+
+# Python
+.venv/
+**/.venv/
+**/__pycache__/
+**/.pytest_cache/
+**/*.py[cod]
+
+# PlatformIO / firmware local
+.pio/
+**/.pio/
+firmware/esp32-bme280/include/Secrets.h
+
+# Credenciales y configuración local
+.env
+**/.env
+
+# Node / IDE / temporales
+node_modules/
+**/node_modules/
+.vscode/
+.DS_Store
+*.tar.gz

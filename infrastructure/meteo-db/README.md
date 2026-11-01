@@ -511,17 +511,21 @@ y actualizar el navegador.
 
 ---
 
-## 13. Componentes pendientes de integración física
+## 13. Estado de integración física
 
-El stack descripto en este documento permite ejecutar completamente la adquisición meteorológica mediante OHMC.
+El stack meteorológico fue validado con fuentes reales durante una prueba de laboratorio:
 
-Quedan como tareas independientes de validación física:
+- ESP32 + BME280 físico operativo.
+- Publicación real del BME280 mediante MQTT.
+- Persistencia de mediciones BME280 en `meteo_data`.
+- Adquisición de datos meteorológicos externos reales mediante OHMC.
+- Visualización simultánea de BME280 y OHMC en Grafana.
+- Visualización conjunta temporal de datos meteorológicos y métricas reales de Starlink durante una prueba de integración.
 
-- ESP32 + BME280.
-- Publicación del BME280 real mediante MQTT.
-- Sensor local de lluvia MH-RD.
-- Validación del comportamiento del sensor de lluvia.
-- Integración conjunta con el dominio Starlink.
-- Dashboard temporal conjunto entre métricas meteorológicas y métricas de red.
+Quedan pendientes:
 
-Estas tareas no impiden reproducir ni validar el pipeline OHMC → MQTT → TimescaleDB → Grafana documentado aquí.
+- Integración física y validación del sensor local de lluvia MH-RD.
+- Incorporación reproducible del datasource Starlink y de los dashboards conjuntos al repositorio común de integración.
+- Pruebas E2E del stack completo desde el repositorio `leo-measurement-station`.
+
+El MH-RD no debe interpretarse directamente como un pluviómetro en milímetros. La precipitación cuantitativa almacenada actualmente en `precipitation_mm` proviene de OHMC.
