@@ -26,6 +26,7 @@ def _settings(**overrides) -> Settings:
         ohmc_base_url="https://estaciones-beta.ohmc.com.ar/api/v1",
         ohmc_email="test@mi.unc.edu.ar",
         ohmc_password="secreto",
+        ohmc_api_token="",
         ohmc_station_id=89,
         watch_dir="/tmp/no-usado",
         scan_interval_seconds=300,
@@ -153,3 +154,28 @@ def test_missing_variable_in_response_maps_to_none() -> None:
 
     assert reading.precipitation_mm is None
     assert reading.temperature_c is not None  # el resto sigue mapeando bien
+
+
+def test_api_token_skips_login_and_uses_x_api_key_header() -> None:
+    settings = _settings(ohmc_api_token="token-de-prueba")
+    client = OhmcClient(settings)
+
+    with patch("src.ohmc_client.requests.post") as mock_post, \
+            patch("src.ohmc_client.requests.get", return_value=_response(REAL_ULTIMAS_RESPONSE)) as mock_get:
+        reading = client.fetch_latest_reading()
+
+    assert mock_post.call_count == 0  # sin login
+    assert mock_get.call_args.kwargs["headers"] == {"X-API-Key": "token-de-prueba"}
+    assert reading.temperature_c == pytest.approx(5.676657306800145)
+
+
+def test_revoked_api_token_raises_clear_error_without_login() -> None:
+    settings = _settings(ohmc_api_token="token-revocado")
+    client = OhmcClient(settings)
+
+    with patch("src.ohmc_client.requests.post") as mock_post, \
+            patch("src.ohmc_client.requests.get", return_value=_response({"detail": "invalid"}, status=401)):
+        with pytest.raises(OhmcClientError, match="rechazó OHMC_API_TOKEN"):
+            client.fetch_latest_reading()
+
+    assert mock_post.call_count == 0
