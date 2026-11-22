@@ -40,6 +40,11 @@ Laboratorio de Hidráulica) vía REST con token.
   3. El cliente (`src/ohmc_client.py`) hace login solo, cachea el token (JWT,
      dura unos días) y lo renueva automáticamente antes de vencer — no hay
      nada manual que rotar en producción.
+  4. **Alternativa recomendada:** generar un token de API en el panel del OHMC
+     y ponerlo en `OHMC_API_TOKEN`. El cliente lo manda en el header
+     `X-API-Key` y no hace login, así que la contraseña de la cuenta no queda
+     guardada en el nodo, y el token se puede revocar desde el panel. Si está
+     completo, `OHMC_EMAIL`/`OHMC_PASSWORD` se ignoran.
 
 **Probado en vivo el 12/9/2026** (no solo con mocks): login real + lectura real
 de la estación, valores plausibles (~6°C, 90% humedad, sin lluvia — una mañana

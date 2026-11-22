@@ -25,10 +25,10 @@ def _request_stop(signum: int, frame: object) -> None:
 
 def run() -> int:
     settings = load_settings()
-    if not settings.ohmc_email or not settings.ohmc_password:
+    if not settings.ohmc_api_token and not (settings.ohmc_email and settings.ohmc_password):
         print(
-            "[ERROR] Faltan OHMC_EMAIL/OHMC_PASSWORD en el .env -- ver README.md, "
-            "sección 'Cómo conseguir las credenciales'.",
+            "[ERROR] Falta OHMC_API_TOKEN (o OHMC_EMAIL/OHMC_PASSWORD) en el .env -- ver "
+            "README.md, sección 'Cómo conseguir las credenciales'.",
             file=sys.stderr,
         )
         return 1
@@ -37,6 +37,7 @@ def run() -> int:
     print(f"[CONFIG] Broker: {settings.mqtt_host}:{settings.mqtt_port}")
     print(f"[CONFIG] Tópico: {settings.measurement_topic}")
     print(f"[CONFIG] Estación OHMC: station_id={settings.ohmc_station_id} (Lab. Hidráulica-UNC)")
+    print(f"[CONFIG] Auth OHMC: {'token de API' if settings.ohmc_api_token else 'login email/password'}")
     print(f"[CONFIG] Intervalo de poll: {settings.poll_interval_seconds}s (RF-11: 900s=15min por defecto)")
 
     client = OhmcClient(settings)

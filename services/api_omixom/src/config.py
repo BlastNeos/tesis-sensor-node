@@ -25,6 +25,10 @@ class Settings:
     ohmc_base_url: str
     ohmc_email: str
     ohmc_password: str
+    # Token de API del panel del OHMC (header X-API-Key). Si está, se usa en lugar
+    # del login con email/password: no hace falta guardar la contraseña en el nodo
+    # y se puede revocar desde el panel sin cambiar la contraseña de la cuenta.
+    ohmc_api_token: str
     ohmc_station_id: int
     # Camino B (fallback/histórico) -- reportes .xlsx exportados a mano desde
     # new.omixom.com. Se mantiene el código (report_ingestor.py) por si algún
@@ -70,6 +74,7 @@ def load_settings() -> Settings:
         ohmc_base_url=os.getenv("OHMC_BASE_URL", "https://estaciones-beta.ohmc.com.ar/api/v1"),
         ohmc_email=os.getenv("OHMC_EMAIL", ""),
         ohmc_password=os.getenv("OHMC_PASSWORD", ""),
+        ohmc_api_token=os.getenv("OHMC_API_TOKEN", ""),
         ohmc_station_id=_int("OHMC_STATION_ID", 89, 1),
         watch_dir=os.getenv("WATCH_DIR", "/data/reportes-omixom"),
         scan_interval_seconds=_int("SCAN_INTERVAL_SECONDS", 300, 10),

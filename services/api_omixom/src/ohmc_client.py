@@ -3,9 +3,13 @@ Córdoba) -- estaciones-beta.ohmc.com.ar/api/v1 -- Camino A, confirmado
 funcionando el 12/9/2026 contra la estación real (`station_id=89`, "APRHi -
 Lab. Hidraulica-UNC").
 
-Auth: login (email+password) -> JWT Bearer, válido unos días (`exp` en el
-propio token). Este cliente cachea el token en memoria y lo renueva solo
-cuando falta poco para vencer -- nunca lo escribe a disco.
+Auth, dos variantes:
+- Token de API del panel (`OHMC_API_TOKEN`, header `X-API-Key`): preferida si
+  está configurada. No hay login ni renovación; un 401 significa que el token
+  fue revocado o es inválido.
+- Login (email+password) -> JWT Bearer, válido unos días (`exp` en el propio
+  token). Este cliente cachea el JWT en memoria y lo renueva solo cuando falta
+  poco para vencer -- nunca lo escribe a disco.
 
 Endpoint de datos: GET /mediciones/ultimas?station_id=X -- devuelve la última
 lectura de TODAS las variables de la estación en un solo call (no filtra por
@@ -93,12 +97,29 @@ class OhmcClient:
             self._token = self._login()
         return self._token.value
 
+    def _fetch_with_api_token(self) -> OmixomReading:
+        try:
+            response = requests.get(
+                f"{self._settings.ohmc_base_url}/mediciones/ultimas",
+                params={"station_id": self._settings.ohmc_station_id},
+                headers={"X-API-Key": self._settings.ohmc_api_token},
+                timeout=self._settings.request_timeout_seconds,
+            )
+            if response.status_code == 401:
+                raise OhmcClientError("El OHMC rechazó OHMC_API_TOKEN (401): revisar si fue revocado.")
+            response.raise_for_status()
+            return _build_reading(response.json().get("data", []))
+        except (requests.RequestException, ValueError, KeyError) as error:
+            raise OhmcClientError(f"No se pudo consultar /mediciones/ultimas: {error}") from error
+
     def fetch_latest_reading(self) -> OmixomReading:
         """Un solo GET a /mediciones/ultimas trae todas las variables de la
         estación; acá se filtran las 6 que importan para env_metrics y se
         arma un único OmixomReading. Si el login vencido causa un 401, se
         reintenta una vez con un token nuevo (por si venció justo entre la
-        última renovación y este request)."""
+        última renovación y este request). Con OHMC_API_TOKEN no hay login."""
+        if self._settings.ohmc_api_token:
+            return self._fetch_with_api_token()
         for attempt in (1, 2):
             token = self._get_token()
             try:
